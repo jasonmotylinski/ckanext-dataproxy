@@ -107,7 +107,11 @@ body {
     * Query Editor
     *********************************************************/
   
-  .recline-query-editor {
+  .controls {
+    display: none;
+  }
+
+    .recline-query-editor {
     float: right;
     height: 35px;
     padding-right: 5px;
