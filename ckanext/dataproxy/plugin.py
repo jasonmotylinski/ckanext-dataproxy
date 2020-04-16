@@ -44,6 +44,10 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
             data_dict['resource']['datastore_active'] = True
             return {'resource_json': json.dumps(data_dict['resource']),
                     'resource_view_json': json.dumps(data_dict['resource_view'])}
+        
+        def view_template(self, context, data_dict):
+            return 'recline_view.html'
+
     DataproxyView = DataproxyView23
 else:
     class DataproxyView22(p.SingletonPlugin):
