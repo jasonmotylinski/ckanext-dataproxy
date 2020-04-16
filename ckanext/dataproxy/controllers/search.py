@@ -117,7 +117,7 @@ class SearchController(ApiController):
         retval['result']['records'] = records
         retval['result']['fields'] = table_fields
         retval['result']['sql'] = sql
-        return json.dumps(retval, default=alchemyencoder, ignore_nan=True
+        return json.dumps(retval, default=alchemyencoder, ignore_nan=True)
 
     def dataproxy_search(self, request_data, resource):
         """Performs actual query on remote database via SqlAlchemy
