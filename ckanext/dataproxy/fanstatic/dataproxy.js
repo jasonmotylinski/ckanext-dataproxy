@@ -38,7 +38,7 @@ function formatConnString(){
 
 $('#content').on("change", "#field-dataproxy-db", function(){
     //preselect default database port for connstring
-    db = $(this).val();
+   
     init();
 });
 
@@ -63,6 +63,7 @@ $('#content').on("click", ".btn.btn-danger.btn-remove-url", function() {
 });
 
 init=function(){
+    db = $(this).val();
     if(db=="athena"){
         $('#dataproxy-details').hide();
     }else{
