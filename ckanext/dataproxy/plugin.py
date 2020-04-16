@@ -16,16 +16,19 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
         p.implements(p.ITemplateHelpers)
 
         def _resource_view_get_fields(self, resource):
+            log.info("_resource_view_get_fields")
             #Skip filter fields lookup for dataproxy resources
             if resource.get('url_type', '') == 'dataproxy':
                 return []
             return resource_view_get_fields(resource)
 
         def get_helpers(self):
+            log.info("get_helpers")
             return {'resource_view_get_fields': self._resource_view_get_fields}
 
         def info(self):
             ''' IResourceView '''
+            log.info("info")
             return {'name': 'database_proxy_view',
                     'title': p.toolkit._('Database Proxy Explorer'),
                     'icon': 'table',
@@ -35,10 +38,12 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
 
         def can_view(self, data_dict):
             ''' IResourceView '''
+            log.info("can_view")
             resource = data_dict['resource']
             return resource.get('url_type', '') == 'dataproxy'
 
         def setup_template_variables(self, context, data_dict):
+            log.info("setup_template_variables")
             # we add datastore_active as json value so recline would request datastore api endpoint,
             # but ckan itself knows it's not datastore therefore ckan won't offer recline views to dataproxy resources
             data_dict['resource']['datastore_active'] = True
@@ -46,6 +51,7 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
                     'resource_view_json': json.dumps(data_dict['resource_view'])}
         
         def view_template(self, context, data_dict):
+            log.info("view_template")
             return 'recline_view.html'
 
     DataproxyView = DataproxyView23
