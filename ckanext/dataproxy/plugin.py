@@ -42,7 +42,8 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
             # but ckan itself knows it's not datastore therefore ckan won't offer recline views to dataproxy resources
             data_dict['resource']['datastore_active'] = True
             return {'resource_json': json.dumps(data_dict['resource']),
-                     'resource_view_json': json.dumps(data_dict['resource_view'])}
+                    'resource_view_json': json.dumps(data_dict['resource_view']),
+                    'custom_styles': "<style>.controls{display:none;}</style>"}
     DataproxyView = DataproxyView23
 else:
     class DataproxyView22(p.SingletonPlugin):
