@@ -133,6 +133,7 @@ class SearchController(ApiController):
         if not secret:
             raise Exception('ckan.dataproxy.secret must be defined to encrypt/decrypt passwords')
 
+        db  = resource.extras['db']
         table_attr  = resource.extras['table']
         schema_name = None
 
@@ -169,7 +170,8 @@ class SearchController(ApiController):
 
         if limit is not None:
             select_query = select_query.limit(limit)
-        if offset is not None:
+
+        if db != "athena" and offset is not None:
             select_query = select_query.offset(offset)
         if sort is not None:
             #check if column exists
