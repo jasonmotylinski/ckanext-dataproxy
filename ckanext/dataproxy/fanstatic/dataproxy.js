@@ -63,7 +63,7 @@ $('#content').on("click", ".btn.btn-danger.btn-remove-url", function() {
 });
 
 init=function(){
-    db = $(this).val();
+    db = $("#field-dataproxy-db").val();
     if(db=="athena"){
         $('#dataproxy-details').hide();
     }else{
