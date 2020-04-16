@@ -39,13 +39,7 @@ function formatConnString(){
 $('#content').on("change", "#field-dataproxy-db", function(){
     //preselect default database port for connstring
     db = $(this).val();
-    if(db=="athena"){
-        $('#dataproxy-details').hide();
-    }else{
-        $('#dataproxy-details').show();
-        $('#field-dataproxy-port').val(portMap[db]);
-        formatConnString();
-    }
+    init();
 });
 
 $('#content').on("keyup", "#dataproxy-fields input", function(){
@@ -67,4 +61,16 @@ $('#content').on("click", ".btn.btn-danger.btn-remove-url", function() {
     //disable fields so they don't get submitted
     $('#dataproxy-fields input, #dataproxy-fields select').prop("disabled", true);
 });
+
+init=function(){
+    if(db=="athena"){
+        $('#dataproxy-details').hide();
+    }else{
+        $('#dataproxy-details').show();
+        $('#field-dataproxy-port').val(portMap[db]);
+        formatConnString();
+    }
+}
+
+init();
 });
