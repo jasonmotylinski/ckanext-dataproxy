@@ -1,5 +1,5 @@
 import urllib
-import json
+import simplejson as json
 import decimal
 import datetime
 import time
@@ -117,7 +117,7 @@ class SearchController(ApiController):
         retval['result']['records'] = records
         retval['result']['fields'] = table_fields
         retval['result']['sql'] = sql
-        return json.dumps(retval, default=alchemyencoder)
+        return json.dumps(retval, default=alchemyencoder, ignore_nan=True
 
     def dataproxy_search(self, request_data, resource):
         """Performs actual query on remote database via SqlAlchemy
@@ -228,7 +228,7 @@ class SearchController(ApiController):
             retval['result']['total'] = count
         retval['result']['_links'] = self._insert_links(limit, offset)
 
-        return json.dumps(retval, default=alchemyencoder)
+        return json.dumps(retval, default=alchemyencoder, ignore_nan=True)
 
     def _get_fields(self, table, **options):
         """

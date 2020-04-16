@@ -39,8 +39,13 @@ function formatConnString(){
 $('#content').on("change", "#field-dataproxy-db", function(){
     //preselect default database port for connstring
     db = $(this).val();
-    $('#field-dataproxy-port').val(portMap[db]);
-    formatConnString();
+    if(db=="athena"){
+        $('#dataproxy-details').hide();
+    }else{
+        $('#dataproxy-details').show();
+        $('#field-dataproxy-port').val(portMap[db]);
+        formatConnString();
+    }
 });
 
 $('#content').on("keyup", "#dataproxy-fields input", function(){
