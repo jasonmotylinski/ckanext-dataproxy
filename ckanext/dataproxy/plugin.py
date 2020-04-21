@@ -12,9 +12,9 @@ DataproxyView = None
 if p.toolkit.check_ckan_version(min_version='2.3.0'):
     from ckanext.reclineview.plugin import ReclineViewBase
     from ckan.lib.helpers import resource_view_get_fields
+
     class DataproxyView23(ReclineViewBase):
         p.implements(p.ITemplateHelpers)
-        p.implements(p.IConfigurer)
 
         def _resource_view_get_fields(self, resource):
             log.info("_resource_view_get_fields")
@@ -50,11 +50,10 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
             data_dict['resource']['datastore_active'] = True
             return {'resource_json': json.dumps(data_dict['resource']),
                     'resource_view_json': json.dumps(data_dict['resource_view'])}
-
-        def update_config(self, config):
-            ''' IConfigurer '''
-            # Add fanstatic folder for serving JS & CSS
-            tk.add_resource('fanstatic', 'dataproxy')
+        
+        def view_template(self, context, data_dict):
+            log.info("view_template")
+            return 'package/recline_view.html'
 
     DataproxyView = DataproxyView23
 else:
