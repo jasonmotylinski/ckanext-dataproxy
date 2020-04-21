@@ -53,7 +53,7 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
         
         def view_template(self, context, data_dict):
             log.info("view_template")
-            return 'package/recline_view.html'
+            return 'dataproxy_view.html'
 
     DataproxyView = DataproxyView23
 else:
