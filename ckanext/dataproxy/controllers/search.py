@@ -13,6 +13,7 @@ from ckan.model import Resource, meta
 from collections import OrderedDict
 from simplecrypt import decrypt
 from binascii import unhexlify
+import ckan.plugins as p
 
 log = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ class SearchController(ApiController):
     """Searchcontroller overrides datastore search_action API endpoint if it exists
     or creates one if datastore is disabled so that dataproxy can be used independantly"""
 
+    @p.toolkit.chained_action
     def search_action(self):
         """Routes dataproxy type resources to dataproxy_search method, else performs 'datastore_search' action"""
         #TODO: No access control checks for dataproxy resources!
@@ -204,11 +206,6 @@ class SearchController(ApiController):
             records.append(d)
 
         # Fetch count of all rows for paging to work
-        sql = select([func.count('*')]).select_from(table)
-        result_count = conn.execute(sql)
-        count = 0
-        for row in result_count:
-            count = row[0]
         retval = OrderedDict()
         retval['help'] = self._help_message()
         retval['success'] = True
@@ -226,8 +223,7 @@ class SearchController(ApiController):
             retval['result']['sort'] = sort
         if q is not None:
             retval['result']['q'] = ''
-        if count:
-            retval['result']['total'] = count
+        retval['result']['total'] = limit
         retval['result']['_links'] = self._insert_links(limit, offset)
 
         return json.dumps(retval, default=alchemyencoder, ignore_nan=True)

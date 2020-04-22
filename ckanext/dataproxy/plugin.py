@@ -3,20 +3,55 @@ import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 from ckanext.dataproxy.logic.action.create import dataproxy_resource_create
 from ckanext.dataproxy.logic.action.update import dataproxy_resource_update
+from ckanext.dataproxy.controllers.search import SearchController
 import logging
+import ckan.logic as logic
+from ckan.model import Resource
 
+logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
+@p.toolkit.chained_action
+def datastore_search(original_action, context, data_dict):
+    '''
+    Execute a datastore search using the custom method in dataproxy
+    '''
+    log.debug("datastore_search: context: {0} data_dict: {1}".format(context, data_dict))
+    logic.check_access('datastore_search', context)
+
+    resource = Resource.get(data_dict['resource_id'])
+    # Discard sorting and only return 10 rows cuz it's a data preview
+    data_dict['sort'] = None
+    data_dict['limit'] = 10
+
+    # execute search
+    results=json.loads(SearchController().dataproxy_search(data_dict, resource))
+    log.debug("datastore_search:  results: {0}".format(results))
+    
+    # set total to limit
+    results['result']['total']=data_dict['limit']    
+
+    # Hack in an _id field because datatables expects it. Add a _id value to each row
+    results['result']['fields']=[{"id":"_id", "type": "BIGINT"}] + results['result']['fields']
+    for i in range(0, len(results['result']['records'])):
+        results['result']['records'][i]['_id'] = i+1
+    
+    
+    return results['result']
 
 DataproxyView = None
 if p.toolkit.check_ckan_version(min_version='2.3.0'):
     from ckanext.reclineview.plugin import ReclineViewBase
+    from ckanext.datatablesview.plugin import DataTablesView
     from ckan.lib.helpers import resource_view_get_fields
+    import ckanext.datastore.interfaces as interfaces
 
-    class DataproxyView23(ReclineViewBase):
+    class DataproxyView23(DataTablesView):
         p.implements(p.ITemplateHelpers)
-
-        def _resource_view_get_fields(self, resource):
+        p.implements(p.IRoutes, inherit=True)
+        p.implements(p.IActions)
+        
+	def _resource_view_get_fields(self, resource):
             log.info("_resource_view_get_fields")
             #Skip filter fields lookup for dataproxy resources
             if resource.get('url_type', '') == 'dataproxy':
@@ -50,6 +85,11 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
             data_dict['resource']['datastore_active'] = True
             return {'resource_json': json.dumps(data_dict['resource']),
                     'resource_view_json': json.dumps(data_dict['resource_view'])}
+    
+
+        def get_actions(self):
+            ''' IActions '''
+            return {'datastore_search': datastore_search}
 
     DataproxyView = DataproxyView23
 else:
@@ -91,3 +131,4 @@ class DataproxyPlugin(p.SingletonPlugin):
         map.connect('dataproxy', '/api/3/action/datastore_search', controller=search_ctrl, action='search_action')
         map.connect('dataproxy', '/api/3/action/datastore_search_sql', controller=search_ctrl, action='search_sql_action')
         return map
+
