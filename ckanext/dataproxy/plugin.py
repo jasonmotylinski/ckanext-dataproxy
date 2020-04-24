@@ -8,6 +8,10 @@ import logging
 import ckan.logic as logic
 from ckan.model import Resource
 
+default = tk.get_validator(u'default')
+boolean_validator = tk.get_validator(u'boolean_validator')
+ignore_missing = tk.get_validator(u'ignore_missing')
+
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
@@ -69,7 +73,11 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
                     'title': p.toolkit._('Database Proxy Explorer'),
                     'icon': 'table',
                     'default_title': p.toolkit._('Database Proxy Explorer'),
-                    'filterable': False
+                    'filterable': False,
+                      'schema': {
+                        u'responsive': [default(False), boolean_validator],
+                        u'show_fields': [ignore_missing],
+                        u'filterable': [default(True), boolean_validator],
                     }
 
         def can_view(self, data_dict):
