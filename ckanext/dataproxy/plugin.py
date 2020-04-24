@@ -69,16 +69,18 @@ if p.toolkit.check_ckan_version(min_version='2.3.0'):
         def info(self):
             ''' IResourceView '''
             log.info("info")
-            return {'name': 'database_proxy_view',
-                    'title': p.toolkit._('Database Proxy Explorer'),
-                    'icon': 'table',
-                    'default_title': p.toolkit._('Database Proxy Explorer'),
-                    'filterable': False,
-                      'schema': {
-                        u'responsive': [default(False), boolean_validator],
-                        u'show_fields': [ignore_missing],
-                        u'filterable': [default(True), boolean_validator],
-                    }
+            return {
+                'name': 'database_proxy_view',
+                'title': p.toolkit._('Database Proxy Explorer'),
+                'icon': 'table',
+                'default_title': p.toolkit._('Database Proxy Explorer'),
+                'filterable': False,
+                    'schema': {
+                    u'responsive': [default(False), boolean_validator],
+                    u'show_fields': [ignore_missing],
+                    u'filterable': [default(True), boolean_validator],
+                }
+            }
 
         def can_view(self, data_dict):
             ''' IResourceView '''
