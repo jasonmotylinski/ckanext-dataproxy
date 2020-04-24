@@ -42,7 +42,7 @@ $('#content').on("change", "#field-dataproxy-db", function(){
     init();
 });
 
-$('#content').on("keyup", "#dataproxy-fields input", function(){
+$('#content').on("keyup", "#dataproxy-fields .connectionstring", function(){
     formatConnString();
 });
 
