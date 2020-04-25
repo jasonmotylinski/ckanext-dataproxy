@@ -19,7 +19,7 @@ def dataproxy_resource_create(context, data_dict=None):
     #If not set, default to empty string
     url_type = data_dict.get('url_type')
 
-    if url_type == 'dataproxy':
+    if url_type == 'dataproxy' and data_dict.get('db_password') is not None:
         secret = config.get('ckan.dataproxy.secret', False)
         if not secret:
             raise Exception('ckan.dataproxy.secret must be defined to encrypt passwords')

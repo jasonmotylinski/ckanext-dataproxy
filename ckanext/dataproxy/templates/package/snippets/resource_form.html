@@ -25,13 +25,6 @@
       {% endif %}
       <input name="url_type" value="dataproxy" type="hidden" {{ form.attributes(disabled) }}/>
         {{ form.select('db', id='field-dataproxy-db', label=_('Database type'), options=[{'value': 'athena', 'text': 'Athena'}, {'value': 'mysql', 'text': 'MySQL'},{'value': 'mssql+pymssql', 'text': 'MsSQL'},{'value': 'postgresql', 'text': 'PostgreSQL'}], selected=data.db, attrs=disabled) }}
-        <div id="dataproxy-details">
-          {{ form.input('port', id='field-dataproxy-port', label=_('Port'), value=data.port | default('3306'), classes=['control-full', 'connectionstring'], attrs=disabled) }}
-          {{ form.input('host', label=_('Host'), id='field-dataproxy-host', placeholder='Hostname or IP adderss', value=data.host, classes=['control-full', 'connectionstring'], attrs=disabled) }}
-          {{ form.input('db_user', id='field-dataproxy-user', label=_('User'), value=data.db_user, classes=['control-full', 'connectionstring'], attrs=disabled) }}
-          {{ form.input('db_password', id='field-dataproxy-password', label=_('Password'), classes=['control-full', 'connectionstring'], placeholder=password_placeholder, attrs=disabled) }}
-          {{ form.input('database', id='field-dataproxy-database', label=_('Database name'), value=data.database, classes=['control-full', 'connectionstring'], attrs=disabled) }}
-        </div>
         {{ form.input('table', id='field-dataproxy-table', label=_('Table'), value=data.table, classes=['control-full'], attrs=disabled) }}
       </div>
       {% endblock %}
@@ -44,7 +37,7 @@
       {% endif %}
       {{ form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
          is_upload_enabled=True, is_url=data.url and not is_upload, is_upload=is_upload,
-         upload_label=_('File'), url_label=_('URL')) }}
+         upload_label=_('File'), url_label=_('SQLAlchemy Connnection String URL')) }}
       {% if not h.uploads_enabled() %}
         </div>
       {% endif %}
@@ -60,8 +53,6 @@
 
     {% block basic_fields_format %}
       {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?'} %}
-      {% call form.input('format', id='field-format', label=_('Format'), placeholder=_('eg. CSV, XML or JSON'), value=data.format, error=errors.format, classes=['control-medium'], attrs=format_attrs) %}
-      {% endcall %}
     {% endblock %}
 
 

@@ -21,7 +21,7 @@ def dataproxy_resource_update(context, data_dict=None):
     data_dict['url_type'] = data_dict.get('url_type', '')
     url_type = data_dict['url_type']
 
-    if url_type == 'dataproxy':
+    if url_type == 'dataproxy' and data_dict.get('db_password') is not None:
         secret = config.get('ckan.dataproxy.secret', False)
         if not secret:
             raise Exception('ckan.dataproxy.secret must be defined to encrypt passwords')

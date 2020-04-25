@@ -139,13 +139,13 @@ class SearchController(ApiController):
 
         schema_and_table = table_attr.split('.') #=> ['schema', 'table']
         table_name = schema_and_table.pop() #=> 'table'
-        if (len(schema_and_table) > 0): schema_name = schema_and_table.pop()
-
-        password = resource.extras['db_password']
-        password = decrypt(secret, unhexlify(password))
-
         connstr = resource.url
-        connstr = connstr.replace('_password_', password)
+
+        if (len(schema_and_table) > 0): schema_name = schema_and_table.pop()
+        if 'db_password' in resource.extras:
+            password = resource.extras['db_password']
+            password = decrypt(secret, unhexlify(password))
+            connstr = connstr.replace('_password_', password)
 
         engine = create_engine(connstr)
         meta = MetaData(bind=engine)
