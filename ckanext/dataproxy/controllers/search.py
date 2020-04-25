@@ -25,8 +25,6 @@ def alchemyencoder(obj):
     elif isinstance(obj, decimal.Decimal):
         return float(obj)
 
-
-
 class SearchController(ApiController):
     """Searchcontroller overrides datastore search_action API endpoint if it exists
     or creates one if datastore is disabled so that dataproxy can be used independantly"""

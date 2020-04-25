@@ -34,3 +34,5 @@ docs/Makefile
 
 #ckanext test config
 test.ini
+
+.vscode

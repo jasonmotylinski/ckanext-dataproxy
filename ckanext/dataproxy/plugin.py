@@ -24,24 +24,27 @@ def datastore_search(original_action, context, data_dict):
     logic.check_access('datastore_search', context)
 
     resource = Resource.get(data_dict['resource_id'])
-    # Discard sorting and only return 10 rows cuz it's a data preview
-    data_dict['sort'] = None
-    data_dict['limit'] = 10
+    
+    if resource is not None and resource.url_type == 'dataproxy':
+        # Discard sorting and only return 10 rows cuz it's a data preview
+        data_dict['sort'] = None
+        data_dict['limit'] = 10
 
-    # execute search
-    results=json.loads(SearchController().dataproxy_search(data_dict, resource))
-    log.debug("datastore_search:  results: {0}".format(results))
-    
-    # set total to limit
-    results['result']['total']=data_dict['limit']    
+        # execute search
+        results=json.loads(SearchController().dataproxy_search(data_dict, resource))
+        log.debug("datastore_search:  results: {0}".format(results))
+        
+        # set total to limit
+        results['result']['total']=data_dict['limit']    
 
-    # Hack in an _id field because datatables expects it. Add a _id value to each row
-    results['result']['fields']=[{"id":"_id", "type": "BIGINT"}] + results['result']['fields']
-    for i in range(0, len(results['result']['records'])):
-        results['result']['records'][i]['_id'] = i+1
+        # Hack in an _id field because datatables expects it. Add a _id value to each row
+        results['result']['fields']=[{"id":"_id", "type": "BIGINT"}] + results['result']['fields']
+        for i in range(0, len(results['result']['records'])):
+            results['result']['records'][i]['_id'] = i+1
+        return results['result']
     
-    
-    return results['result']
+    #Default action otherwise
+    return original_action(context, data_dict)
 
 DataproxyView = None
 if p.toolkit.check_ckan_version(min_version='2.3.0'):
